@@ -1,0 +1,21 @@
+.block_with_input {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 10px; }
+
+label {
+  width: 100px;
+  display: inline-block; }
+
+input {
+  display: block;
+  padding: 10px;
+  border: 0;
+  box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.15); }
+
+.input:focus {
+  outline: none; }
+
+.input_with_error {
+  outline: none;
+  background-color: rgba(155, 71, 252, 0.7); }

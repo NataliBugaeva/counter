@@ -1,0 +1,22 @@
+.screen {
+  /*display: flex;
+  flex-direction: column;*/
+  //justify-content: center;
+  padding: 20px 0;
+  width: 100%;
+  margin-bottom: 10px;
+  box-shadow:0 0 7px 2px rgba(0,0,0,0.15);
+}
+
+.counter {
+  font-size: 40px;
+  color: black;
+  font-weight: bold;
+}
+
+.disabledCounter {
+  font-size: 40px;
+  color: rgba(155,71,252,0.7);
+  font-weight: bold;
+}
+

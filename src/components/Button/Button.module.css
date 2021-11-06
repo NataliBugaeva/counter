@@ -1,0 +1,18 @@
+.button {
+  min-width: 70px;
+  padding: 5px;
+  margin: 5px;
+  border: none;
+  background-color: #28b718;
+  color: white;
+  font-weight: bold; }
+
+.disabledButton {
+  min-width: 70px;
+  padding: 5px;
+  margin: 5px;
+  border: none;
+  background-color: #28b718;
+  color: white;
+  font-weight: bold;
+  opacity: .3; }
