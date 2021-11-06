@@ -4,6 +4,11 @@ import {Screen} from "./components/Screen/Screen";
 import {Button} from "./components/Button/Button";
 import {v1} from "uuid";
 
+//для второго варианта добавила useState mode
+//изменила setValue
+//отрисовку раскоменть
+//в пропсы в button еще прокинула mode
+//disabled изменила условия
 
 export type InputType = {
     id: string,
@@ -11,8 +16,10 @@ export type InputType = {
     value: string,
     class: string
 }
+export type ModeType = 'counterMode' | 'settingsMode';
 
 function App() {
+
 
     const [counter, setCounter] = React.useState<number>(0);
     const [inputs, setInputs] = React.useState<Array<InputType>>([
@@ -23,6 +30,8 @@ function App() {
     const [minValue, setMinValue] = React.useState<number>(0);
     const [maxValue, setMaxValue] = React.useState<number>(5);
     const [buttonSetDisabled, setButtonSetDisabled] = React.useState<boolean>(true);
+
+    const [mode, setMode] = React.useState<ModeType>('counterMode')
 
 
     React.useEffect(() => {
@@ -85,10 +94,17 @@ function App() {
 
     //по нажатию на кнопку set в LS будут сохраняться два значения minValue и maxValue и меняется значение счетчика на minValue
     const setValue = () => {
-        localStorage.setItem('maxValue', JSON.stringify(maxValue));
-        localStorage.setItem('minValue', JSON.stringify(minValue));
-        setCounter(minValue);
-        setButtonSetDisabled(true);
+        //здесьь сделала изменения с if-else Для второго случая
+        //чтоб вернуть как было, оставьь только else
+        if (mode === 'counterMode') {
+            setMode('settingsMode');
+        } else {
+            localStorage.setItem('maxValue', JSON.stringify(maxValue));
+            localStorage.setItem('minValue', JSON.stringify(minValue));
+            setCounter(minValue);
+            setButtonSetDisabled(true);
+            setMode('counterMode');
+        }
     }
 
     //по нажатию на кнопку Inc будет увеличиваться счеткчик. кнопка д.б. задизэйблена, если счетчик равен maxValue
@@ -104,10 +120,58 @@ function App() {
         setCounter(Number(JSON.parse(localStorage.getItem('minValue') || '0')));
     }
 
+
+    const table = mode === 'counterMode' ? <div className='table'>
+        <Screen counter={counter}
+                inputs={inputs}
+                changeInputValue={changeInputValue}
+                error={error}
+                buttonSetDisabled={buttonSetDisabled}
+                maxValue={maxValue}/>
+        <div className='block_with_buttons'>
+            <Button name={'inc'}
+                    counter={counter}
+                    callback={increaseCounter}
+                    buttonSetDisabled={buttonSetDisabled}
+                    error={error}
+            mode={mode}/>
+            <Button name={'reset'}
+                    counter={counter}
+                    callback={resetCounter}
+                    buttonSetDisabled={buttonSetDisabled}
+                    error={error}
+                    mode={mode}/>
+            <Button name={'set'}
+                    counter={counter}
+                    callback={setValue}
+                    buttonSetDisabled={buttonSetDisabled}
+                    error={error}
+                    mode={mode}/>
+        </div>
+    </div> : <div className='table'>
+        <Screen inputs={inputs}
+                changeInputValue={changeInputValue}
+                error={error}
+                buttonSetDisabled={buttonSetDisabled}
+                maxValue={maxValue}/>
+        <div className='block_with_buttons'>
+            <Button name={'set'}
+                    counter={counter}
+                    callback={setValue}
+                    buttonSetDisabled={buttonSetDisabled}
+                    error={error}
+                    mode={mode}/>
+
+        </div>
+    </div>
+
     //  console.log(minValue, maxValue, error, buttonSetDisabled)
     return (
+
         <div className="App">
-            <div className='table'>
+            {table}
+
+            {/*<div className='table'>
                 <Screen inputs={inputs}
                         changeInputValue={changeInputValue}
                         error={error}
@@ -142,7 +206,7 @@ function App() {
                             buttonSetDisabled={buttonSetDisabled}
                             error={error}/>
                 </div>
-            </div>
+            </div>*/}
         </div>
     );
 }

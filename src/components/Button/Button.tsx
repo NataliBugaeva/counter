@@ -1,17 +1,21 @@
 import React from "react";
 import s from "./Button.module.css";
+import {ModeType} from "../../App";
 
 export type ButtonPropsType = {
     name: string,
     counter: number,
     callback: () => void,
     buttonSetDisabled: boolean,
-    error: string
+    error: string,
+    mode: ModeType
 }
 
 export const Button = (props: ButtonPropsType) => {
     const disable: any =
-        ((props.name === 'set') && (props.buttonSetDisabled))
+        //эта строка была для перфгого варианта
+        //((props.name === 'set') && (props.buttonSetDisabled))
+        ((props.name === 'set') && (props.buttonSetDisabled)) && (props.mode === 'settingsMode')
         || ((props.name === 'inc') && ((props.counter === Number(JSON.parse(localStorage.getItem('maxValue') || '5'))) || !props.buttonSetDisabled || props.error.length))
         || ((props.name === 'reset') && ((!props.buttonSetDisabled) || props.error.length));
 

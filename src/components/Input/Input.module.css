@@ -5,7 +5,9 @@
 
 label {
   width: 100px;
-  display: inline-block; }
+  display: inline-block;
+  font-weight: bold;
+  color: #28b718; }
 
 input {
   display: block;
