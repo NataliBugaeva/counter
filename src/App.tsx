@@ -49,62 +49,61 @@ function App() {
         setMaxValue(Number(inputs.find(e => e.label === 'maxValue')!.value));
     }, [inputs])
 
+//переменная для изменения аида инпута с ошибкой
+
+    let inputView = '';
     //это меняет значение инпута и перерисовывает стэйт
     const changeInputValue = (inputId: string, inputName: string, value: string) => {
-        setInputs(inputs.map(e => e.id === inputId ? {...e, value} : e));
-        let inputView = '';
-        console.log(value, inputName, minValue, maxValue);
+       console.log(value, inputName, minValue, maxValue);
 
-        if (minValue <= 0 && inputName !== 'minValue') {
-            console.log('ошибка')
-            setError('Incorrect value!');
-            setButtonSetDisabled(true);
-            inputView = 'input_with_error';
-            setInputs(inputs.map(e => e.label !== 'minValue' ? {...e, value} : {...e, class: inputView}));
-        } else if (maxValue <= 0 && inputName !== 'maxValue') {
-            console.log('ошибка')
-            setError('Incorrect value!');
-            setButtonSetDisabled(true);
-            inputView = 'input_with_error';
-            setInputs(inputs.map(e => e.label !== 'maxValue' ? {...e, value} : {...e, class: inputView}));
-        } else if ((inputName === 'maxValue' || inputName === 'minValue') && Number(value) < 0) {
-            console.log('ошибка')
-            setError('Incorrect value!');
-            setButtonSetDisabled(true);
-            inputView = 'input_with_error';
-            setInputs(inputs.map(e => e.id === inputId ? {...e, value, class: inputView} : e));
-        } else if ((inputName === 'minValue' && Number(value) >= maxValue)
-            || (inputName === 'maxValue' && Number(value) <= minValue)) {
-            console.log('ошибка')
-            setError('Incorrect value!');
-            setButtonSetDisabled(true);
-            inputView = 'input_with_error';
-            setInputs(inputs.map(e => e.label === inputName ? {...e, value, class: inputView} : {
-                ...e,
-                class: inputView
-            }));
-        } else {
+        //если ошибки нет
+        if((inputName === 'maxValue' && minValue >= 0 && minValue < Number(value))
+            || (inputName === 'minValue' && Number(value) >= 0 && Number(value) < maxValue)) {
             console.log('ошибка ушла')
             inputView = '';
             setError('');
             setButtonSetDisabled(false);
-            setInputs(inputs.map(e => e.id === inputId ? {...e, value, class: inputView} : {...e, class: inputView}));
+            setInputs(inputs.map(e => e.label === inputName ? {...e, value, class: inputView} : {...e, class: inputView} ))
+        } else {
+            console.log('ошибка')
+            setError('Incorrect value!');
+            setButtonSetDisabled(true);
+            inputView = 'input_with_error';
+           //если меняя какой-нибудь из инпутов вводим некорректное значение
+            if((inputName==='minValue' && (Number(value)<0 || Number(value)>maxValue))
+                || (inputName==='maxValue' && (Number(value)<=0 || Number(value)<minValue))) {
+                setInputs(inputs.map(e => e.label===inputName ? {...e, value, class: inputView} : e));
+           //если меняя один инпут вводим в него корректное значение, но другой при этом уже был подсвечен ошибкой
+            } else if((inputName==='minValue' && Number(value)>=0 && Number(value)<maxValue && error.length)
+                || (inputName==='maxValue' && Number(value)>0 && Number(value)>minValue && error.length)) {
+                setInputs(inputs.map(e => e.label===inputName ? {...e,value,class:''} : {...e, class: inputView}));
+           //если в инпутах получились одинаковые значения, то ошибкой подсветятся оба
+            } else if((inputName==='minValue' && Number(value)===maxValue)
+                || (inputName==='maxValue' && Number(value)===minValue)) {
+                setInputs(inputs.map(e => e.label===inputName ? {...e,value,class:inputView} : {...e,class:inputView}));
+            }
         }
+
     }
 
     //по нажатию на кнопку set в LS будут сохраняться два значения minValue и maxValue и меняется значение счетчика на minValue
     const setValue = () => {
         //здесьь сделала изменения с if-else Для второго случая
         //чтоб вернуть как было, оставьь только else
-        if (mode === 'counterMode') {
-            setMode('settingsMode');
-        } else {
-            localStorage.setItem('maxValue', JSON.stringify(maxValue));
-            localStorage.setItem('minValue', JSON.stringify(minValue));
-            setCounter(minValue);
-            setButtonSetDisabled(true);
-            setMode('counterMode');
-        }
+        // if (mode === 'counterMode') {
+        //     setMode('settingsMode');
+        // } else {
+        //     localStorage.setItem('maxValue', JSON.stringify(maxValue));
+        //     localStorage.setItem('minValue', JSON.stringify(minValue));
+        //     setCounter(minValue);
+        //     setButtonSetDisabled(true);
+        //     setMode('counterMode');
+        // }
+        localStorage.setItem('maxValue', JSON.stringify(maxValue));
+        localStorage.setItem('minValue', JSON.stringify(minValue));
+        setCounter(minValue);
+        setButtonSetDisabled(true);
+        setMode('counterMode');
     }
 
     //по нажатию на кнопку Inc будет увеличиваться счеткчик. кнопка д.б. задизэйблена, если счетчик равен maxValue
@@ -121,7 +120,7 @@ function App() {
     }
 
 
-    const table = mode === 'counterMode' ? <div className='table'>
+  /*  const table = mode === 'counterMode' ? <div className='table'>
         <Screen counter={counter}
                 inputs={inputs}
                 changeInputValue={changeInputValue}
@@ -163,15 +162,13 @@ function App() {
                     mode={mode}/>
 
         </div>
-    </div>
+    </div>*/
 
     //  console.log(minValue, maxValue, error, buttonSetDisabled)
     return (
 
         <div className="App">
-            {table}
-
-            {/*<div className='table'>
+            <div className='table'>
                 <Screen inputs={inputs}
                         changeInputValue={changeInputValue}
                         error={error}
@@ -183,7 +180,6 @@ function App() {
                             callback={setValue}
                             buttonSetDisabled={buttonSetDisabled}
                             error={error}/>
-
                 </div>
             </div>
 
@@ -206,7 +202,7 @@ function App() {
                             buttonSetDisabled={buttonSetDisabled}
                             error={error}/>
                 </div>
-            </div>*/}
+            </div>
         </div>
     );
 }

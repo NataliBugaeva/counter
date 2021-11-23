@@ -22,7 +22,7 @@ export const Screen = (props: ScreenPropsType) => {
     let ui;
 
     if (typeof props.counter === 'number') {
-console.log('отловидли')
+console.log('отловили')
         if (!props.error.length && !props.buttonSetDisabled) {
             ui = <span style={{color: '#28b718', fontWeight: 'bold'}}>Enter values and press key!</span>
         }

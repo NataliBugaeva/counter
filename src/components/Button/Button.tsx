@@ -8,14 +8,15 @@ export type ButtonPropsType = {
     callback: () => void,
     buttonSetDisabled: boolean,
     error: string,
-    mode: ModeType
+  //  mode: ModeType
 }
 
 export const Button = (props: ButtonPropsType) => {
     const disable: any =
         //эта строка была для перфгого варианта
-        //((props.name === 'set') && (props.buttonSetDisabled))
-        ((props.name === 'set') && (props.buttonSetDisabled)) && (props.mode === 'settingsMode')
+        ((props.name === 'set') && (props.buttonSetDisabled))
+       //а эта для второго
+       // ((props.name === 'set') && (props.buttonSetDisabled)) && (props.mode === 'settingsMode')
         || ((props.name === 'inc') && ((props.counter === Number(JSON.parse(localStorage.getItem('maxValue') || '5'))) || !props.buttonSetDisabled || props.error.length))
         || ((props.name === 'reset') && ((!props.buttonSetDisabled) || props.error.length));
 
