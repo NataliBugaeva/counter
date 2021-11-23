@@ -26,10 +26,28 @@ const initialState: MainReducerType = {
 
 export const MainReducer = (state: MainReducerType = initialState, action: ActionsType): MainReducerType => {
     switch (action.type) {
-        case 'SET-INPUTS': {
+        case "SET-VALUES-FROM-LS": {
             return {
-                ...state, inputs: state.inputs.map(e => e.label === 'maxValue' ? {...e, value: action.newMax}
+                ...state, inputs: state.inputs.map(e => e.label === 'maxValue' ? {...e, value: action.newMAx}
                     : {...e, value: action.newMin})
+            }
+        }
+        case "SET-THE-SAME-OR-CORRECT-VALUES": {
+            return {
+                ...state, inputs: state.inputs.map(e => e.label === action.inputName ?
+                    {...e, value: action.value, class: action.inputView} : {...e, class: action.inputView})
+            }
+        }
+        case "SET-INCORRECT-VALUE": {
+            return {
+                ...state, inputs: state.inputs.map(e => e.label === action.inputName ?
+                    {...e, value: action.value, class: action.inputView} : e)
+            }
+        }
+        case "SET-CORRECT-VALUE-BUT-ANOTHER-HAS-ERROR": {
+            return {
+                ...state, inputs: state.inputs.map(e => e.label === action.inputName ?
+                    {...e, value: action.value, class: ''} : {...e, class: action.inputView})
             }
         }
         case 'SET-COUNTER': {
@@ -45,7 +63,10 @@ export const MainReducer = (state: MainReducerType = initialState, action: Actio
             return {...state, error: action.errorValue}
         }
         case "SET-BUTTON-SET-DISABLED": {
-                return {...state, buttonSetDisabled: action.disabled}
+            return {...state, buttonSetDisabled: action.disabled}
+        }
+        case "SET-MODE": {
+            return {...state, mode: action.mode}
         }
 
         default:
@@ -54,17 +75,29 @@ export const MainReducer = (state: MainReducerType = initialState, action: Actio
 
 }
 
-export type ActionsType = ReturnType<typeof setInputs>
+export type ActionsType = ReturnType<typeof setValuesFromLS>
+    | ReturnType<typeof setTheSameOrCorrectValues>
+    | ReturnType<typeof setIncorrectValue>
+    | ReturnType<typeof setCorrectValueButAnotherHasError>
     | ReturnType<typeof setCounter>
     | ReturnType<typeof setMinValue>
     | ReturnType<typeof setMaxValue>
     | ReturnType<typeof setError>
     | ReturnType<typeof setButtonSetDisabled>
+    | ReturnType<typeof setMode>
 
-
-export const setInputs = (newMax: string, newMin: string) => ({type: 'SET-INPUTS', newMax, newMin} as const);
+export const setValuesFromLS = (newMAx: string, newMin: string) =>
+    ({type: 'SET-VALUES-FROM-LS', newMAx, newMin} as const);
+export const setTheSameOrCorrectValues = (inputName: string, inputView: string, value: string) =>
+    ({type: "SET-THE-SAME-OR-CORRECT-VALUES", inputName, inputView, value} as const);
+export const setIncorrectValue = (inputName: string, inputView: string, value: string) =>
+    ({type: "SET-INCORRECT-VALUE", inputName, inputView, value} as const);
+export const setCorrectValueButAnotherHasError = (inputName: string, inputView: string, value: string) =>
+    ({type: "SET-CORRECT-VALUE-BUT-ANOTHER-HAS-ERROR", inputName, inputView, value} as const);
 export const setCounter = (counter: number) => ({type: 'SET-COUNTER', counter} as const);
 export const setMinValue = () => ({type: 'SET-MIN-VALUE'} as const);
 export const setMaxValue = () => ({type: 'SET-MAX-VALUE'} as const);
 export const setError = (errorValue: string) => ({type: 'SET-ERROR', errorValue} as const);
 export const setButtonSetDisabled = (disabled: boolean) => ({type: "SET-BUTTON-SET-DISABLED", disabled} as const);
+
+export const setMode = (mode: string) => ({type: "SET-MODE", mode} as const);
