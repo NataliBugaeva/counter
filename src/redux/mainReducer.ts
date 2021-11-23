@@ -1,5 +1,5 @@
 import {v1} from "uuid";
-import {InputType} from "../App";
+import {InputType, ModeType} from "../App";
 
 export type MainReducerType = {
     counter: number,
@@ -8,7 +8,7 @@ export type MainReducerType = {
     minValue: number,
     maxValue: number,
     buttonSetDisabled: boolean,
-    mode: string
+    mode: ModeType
 }
 
 const initialState: MainReducerType = {
@@ -100,4 +100,4 @@ export const setMaxValue = () => ({type: 'SET-MAX-VALUE'} as const);
 export const setError = (errorValue: string) => ({type: 'SET-ERROR', errorValue} as const);
 export const setButtonSetDisabled = (disabled: boolean) => ({type: "SET-BUTTON-SET-DISABLED", disabled} as const);
 
-export const setMode = (mode: string) => ({type: "SET-MODE", mode} as const);
+export const setMode = (mode: ModeType) => ({type: "SET-MODE", mode} as const);
